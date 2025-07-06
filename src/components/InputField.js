@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import { SvgFromXml } from 'react-native-svg';
 import svgs from '../assets/svgs';
 import { useAppColors } from '../assets/appColors';
@@ -9,6 +15,13 @@ export default function InputField({
   iconLeftXml,
   iconRightXml,
   secureTextEntry,
+  value,
+  onChangeText,
+  renderRightElement,
+  disabled,
+  textArea,
+  onPress,
+  ...props
 }) {
   const [showPassword, setShowPassword] = React.useState(secureTextEntry);
   const appColors = useAppColors();
@@ -21,7 +34,11 @@ export default function InputField({
     setShowPassword(!showPassword);
   };
   return (
-    <View style={styles.inputContainer}>
+    <TouchableOpacity
+      style={styles.inputContainer}
+      onPress={onPress}
+      disabled={!onPress}
+    >
       {iconLeftXml && (
         <SvgFromXml
           xml={iconLeftXml}
@@ -30,12 +47,26 @@ export default function InputField({
           style={styles.iconLeft}
         />
       )}
-      <TextInput
-        placeholder={placeholder}
-        style={styles.input}
-        secureTextEntry={showPassword}
-        placeholderTextColor={appColors.gray}
-      />
+
+      {!onPress ? (
+        <TextInput
+          multiline={textArea}
+          placeholder={placeholder}
+          style={[styles.input, textArea && { height: 100 }]}
+          secureTextEntry={showPassword}
+          placeholderTextColor={appColors.gray}
+          value={value}
+          onChangeText={onChangeText}
+          editable={!disabled}
+          {...props}
+        />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.input, { flex: 1 }]}>
+            {value || placeholder}
+          </Text>
+        </View>
+      )}
       {iconRightXml && (
         <SvgFromXml
           onPress={handleEndIconPress}
@@ -45,7 +76,8 @@ export default function InputField({
           style={styles.iconRight}
         />
       )}
-    </View>
+      {renderRightElement && renderRightElement}
+    </TouchableOpacity>
   );
 }
 

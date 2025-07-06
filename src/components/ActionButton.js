@@ -1,5 +1,10 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import { useAppColors } from '../assets/appColors';
 
 export default function ActionButton({
@@ -8,24 +13,32 @@ export default function ActionButton({
   style,
   secondary,
   small,
+  loading,
+  disabled,
+  primaryOutline,
 }) {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
   return (
     <TouchableOpacity
+      activeOpacity={disabled ? 1 : 0.5}
       style={[
         styles.button,
         style,
         secondary && styles.secondary,
         small && styles.small,
+        primaryOutline && styles.primaryOutline,
       ]}
-      onPress={onPress}
+      onPress={!loading && !disabled ? onPress : undefined}
     >
+      {loading && <ActivityIndicator size="small" color={appColors.white} />}
+
       <Text
         style={[
           styles.text,
           secondary && styles.secondaryText,
           small && styles.smallText,
+          primaryOutline && styles.primaryOutlineText,
         ]}
       >
         {label}
@@ -42,6 +55,9 @@ const useStyles = appColors => {
       borderRadius: 30,
       alignItems: 'center',
       marginVertical: 8,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: 10,
     },
     secondary: {
       borderWidth: 1,
@@ -58,6 +74,15 @@ const useStyles = appColors => {
     },
     smallText: {
       fontSize: 14,
+    },
+    primaryOutline: {
+      borderWidth: 1,
+      borderColor: appColors.primary,
+      backgroundColor: 'transparent',
+      color: appColors.primary,
+    },
+    primaryOutlineText: {
+      color: appColors.primary,
     },
   });
 };

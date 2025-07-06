@@ -3,35 +3,110 @@ import React, { useRef, useState } from 'react';
 import Header from '../components/Header';
 import { useAppColors } from '../assets/appColors';
 import { SingleEmployeeItem } from '../components/EmployeeList';
-import { item } from '../components/EditWorkdayScheduleSheet';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import { useMMKVStorage } from 'react-native-mmkv-storage';
 import { STORAGE } from '../storage/STORAGE';
 import EditProfileBottomSheet from '../components/EditProfileBottomSheet';
 import { useNavigation } from '@react-navigation/native';
+import { apiClient } from '../services/common/apiClient';
+import showToast from '../utils/toast';
+import AddEmployeeSheet from '../components/AddEmployeeSheet';
+import RNRestart from 'react-native-restart';
 const MenuScreen = () => {
   const navigation = useNavigation();
   const appColors = useAppColors();
   const styles = useStyles(appColors);
   const actionSheetRef = useRef(null);
   const [itemToEdit, setItemToEdit] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [user] = useMMKVStorage('user', STORAGE, {});
+  const [selectedRole] = useMMKVStorage('selectedRole', STORAGE, 'Employee');
+  const userData = {
+    ...user,
+    heading: user?.name,
+    label: user?.email,
+    image: user?.profile_photo_url,
+  };
   const handleEditProfile = item => {
     console.log('item', item);
     setItemToEdit(item);
     actionSheetRef.current?.show();
   };
+  const handleProfileUpdate = async ({
+    requestData,
+    itemToEdit,
+    onSuccess,
+  }) => {
+    try {
+      const formData = new FormData();
+      formData.append('name', requestData?.name);
+      formData.append('email', requestData?.email);
+      formData.append('phone', requestData?.phone);
+      formData.append('job_role', requestData?.job_role);
+      formData.append('start_date', requestData?.start_date);
+      if (requestData?.image) {
+        formData.append('image', {
+          uri: requestData?.image?.uri,
+          name: requestData?.image?.name,
+          type: requestData?.image?.type,
+        });
+      }
+      console.log('formData', formData);
+      setIsLoading(true);
+      const response = await apiClient.post(
+        `employee/update/${user?.id}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      setIsLoading(false);
+      console.log('response', response);
+      showToast.success('Success', response?.message || 'Profile updated');
+      if (response?.status) {
+        STORAGE.setMap('user', response?.data);
+        showToast.success('Success', response?.message || 'Profile updated');
+        if (onSuccess) {
+          setTimeout(() => {
+            onSuccess();
+          }, 2000);
+        }
+      } else {
+        showToast.error('Error', response?.message || 'Something went wrong');
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(
+        'error',
+        error?.response?.data,
+        error?.response?.data?.message,
+      );
+      showToast.error(
+        'Error',
+        error?.response?.data?.message || 'Something went wrong',
+      );
+    }
+  };
   return (
     <View style={styles.container}>
       <Header label="Menu" />
       <View style={styles.profileContainer}>
-        <SingleEmployeeItem item={item} onEdit={handleEditProfile} />
+        <SingleEmployeeItem
+          hideEditIcon={selectedRole == 'Employer'}
+          item={userData}
+          onEdit={handleEditProfile}
+        />
       </View>
       <MenuRow
         icon={<Feather name="moon" size={18} color={appColors.lightGray} />}
         label="Dark Mode"
         isSwitch
-        onPress={() => {}}
+        onPress={() => {
+          RNRestart.restart();
+        }}
       />
       <MenuRow
         icon={
@@ -42,24 +117,37 @@ const MenuScreen = () => {
           navigation.navigate('EmployeeCalander');
         }}
       />
-      <MenuRow
+      {/* <MenuRow
         icon={<Feather name="clock" size={16} color={appColors.lightGray} />}
         label="Manage Workday Schedules"
-      />
+      /> */}
 
       <MenuRow
         icon={<AntDesign name="logout" size={16} color={appColors.lightGray} />}
         label="Logout"
-        onPress={() => {}}
+        onPress={() => {
+          STORAGE.clearStore();
+          navigation.replace('Login');
+        }}
       />
-      <EditProfileBottomSheet
+      {/* <EditProfileBottomSheet
         actionSheetRef={actionSheetRef}
         itemToEdit={itemToEdit}
         title="Edit Profile"
         primaryButtonText="Save"
         secondaryButtonText="Cancel"
-        onPrimaryButtonPress={() => {}}
+        onPrimaryButtonPress={handleEmployeeUpdate}
         onSecondaryButtonPress={() => {}}
+      /> */}
+      <AddEmployeeSheet
+        actionSheetRef={actionSheetRef}
+        itemToEdit={userData}
+        title="Edit Profile"
+        primaryButtonText="Save"
+        secondaryButtonText="Cancel"
+        onPrimaryButtonPress={handleProfileUpdate}
+        onSecondaryButtonPress={() => {}}
+        primaryLoading={isLoading}
       />
     </View>
   );

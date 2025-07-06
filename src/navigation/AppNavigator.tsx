@@ -1,21 +1,30 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from '../screens/LoginScreen.js';
+import LoginScreen from '../screens/auth/LoginScreen';
 import BottomTabs from './BottomTabs.tsx';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useAppColors } from '../assets/appColors.js';
 import EmployeeCalander from '../screens/EmployeeCalander';
+import { STORAGE } from '../storage/STORAGE.js';
+import { useMMKVStorage } from 'react-native-mmkv-storage';
 
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigator() {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
+  const [user, setUser] = useMMKVStorage('user', STORAGE, {});
+  const [selectedRole, setSelectedRole] = useMMKVStorage(
+    'selectedRole',
+    STORAGE,
+    'Employee',
+  );
+  console.log('user', user);
   return (
     <SafeAreaView style={styles.SafeAreaView}>
       <View style={styles.View}>
         <Stack.Navigator
-          initialRouteName="Login"
+          initialRouteName={user?.id ? 'BottomTabs' : 'Login'}
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: appColors.white },

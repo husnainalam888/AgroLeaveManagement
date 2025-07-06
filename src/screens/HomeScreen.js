@@ -1,55 +1,84 @@
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
 import Header from '../components/Header';
 import svgs from '../assets/svgs';
 import DepartWiseEmployeeList from '../components/DepartWiseEmployeeList.js';
 import Fab from '../components/Fab.js';
 import { useAppColors } from '../assets/appColors';
-import { useEmployees, useCreateEmployee, useLogin } from '../hooks/api';
+import { useHomeScreen } from '../hooks/useHomeScreen';
+import AddEmployeeSheet from '../components/AddEmployeeSheet';
 
-export const menuOptions = [
-  { label: 'Sort by heading', onSelect: () => console.log('Sort by heading') },
-  { label: 'Sort by ID', onSelect: () => console.log('Sort by ID') },
+export const departWiseEmployeeList = [
   {
-    label: 'Sort by Department',
-    onSelect: () => console.log('Sort by Department'),
+    id: 1,
+    heading: 'Product',
+    subList: [
+      {
+        id: 1,
+        heading: 'Jennie Nolan',
+        label: 'jennie.nolan@example.com',
+        image:
+          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fHww',
+      },
+      {
+        id: 2,
+        heading: 'Will Smith',
+        label: 'will.smith@example.com',
+        image:
+          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      },
+      {
+        id: 3,
+        heading: 'Emma Watson',
+        label: 'emma.watson@example.com',
+        image:
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      },
+    ],
   },
   {
-    label: 'Sort by Designation',
-    onSelect: () => console.log('Sort by Designation'),
+    id: 2,
+    heading: 'Marketing',
+    subList: [
+      {
+        id: 7,
+        heading: 'Nova Peris',
+        label: 'nova.peris@example.com',
+        image:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      },
+
+      {
+        id: 4,
+        heading: 'James Doe',
+        label: 'james.doe@example.com',
+        image:
+          'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      },
+      {
+        id: 6,
+        heading: 'Tom Hardy',
+        label: 'tom.hardy@example.com',
+        image:
+          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      },
+    ],
   },
-  { label: 'Sort by Status', onSelect: () => console.log('Sort by Status') },
 ];
-
 const HomeScreen = () => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
-
-  const { data: employees, isLoading, error, refetch } = useEmployees();
-  const createEmployee = useCreateEmployee();
-  const login = useLogin();
-
-  if (isLoading) {
-    return (
-      <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color={appColors.primary} />
-        <Text style={styles.loadingText}>Loading employees...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={[styles.container, styles.centerContent]}>
-        <Text style={styles.errorText}>Error loading employees</Text>
-        <Text style={styles.retryText} onPress={refetch}>
-          Tap to retry
-        </Text>
-      </View>
-    );
-  }
-
-  const departWiseEmployeeList = employees?.data || [];
+  const actionSheetRef = useRef(null);
+  const {
+    menuOptions,
+    employeeList,
+    handleAddEmployee,
+    addingEmployee,
+    loadingEmployeeList,
+    handleEditEmployee,
+    employeeToEdit,
+    setEmployeeToEdit,
+  } = useHomeScreen({ actionSheetRef });
 
   return (
     <View style={styles.container}>
@@ -58,8 +87,22 @@ const HomeScreen = () => {
         threeDotOptions={menuOptions}
         label="Employees"
       />
-      <DepartWiseEmployeeList data={departWiseEmployeeList} />
-      <Fab />
+      <DepartWiseEmployeeList
+        data={employeeList}
+        loading={loadingEmployeeList}
+        onEdit={handleEditEmployee}
+      />
+      <Fab onPress={() => actionSheetRef.current?.show()} />
+      <AddEmployeeSheet
+        title={employeeToEdit?.id ? 'Edit Employee' : 'Add Employee'}
+        actionSheetRef={actionSheetRef}
+        primaryButtonText={employeeToEdit?.id ? 'Update' : 'Add'}
+        onPrimaryButtonPress={handleAddEmployee}
+        secondaryButtonText="Cancel"
+        addingEmployee={addingEmployee}
+        itemToEdit={employeeToEdit}
+        onClose={() => setEmployeeToEdit(null)}
+      />
     </View>
   );
 };
@@ -71,26 +114,6 @@ const useStyles = appColors => {
     container: {
       flex: 1,
       paddingHorizontal: 16,
-    },
-    centerContent: {
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    loadingText: {
-      marginTop: 16,
-      fontSize: 16,
-      color: appColors.text,
-    },
-    errorText: {
-      fontSize: 16,
-      color: appColors.error,
-      textAlign: 'center',
-    },
-    retryText: {
-      marginTop: 8,
-      fontSize: 14,
-      color: appColors.primary,
-      textDecorationLine: 'underline',
     },
   });
 };

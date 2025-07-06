@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GlobalSheet from './GlobalSheet';
 import { Image, StyleSheet, View } from 'react-native';
 import { useAppColors } from '../assets/appColors';
@@ -8,15 +8,29 @@ import InputField from './InputField';
 import { useMMKVStorage } from 'react-native-mmkv-storage';
 import { STORAGE } from '../storage/STORAGE';
 import Label from './Label';
+import { ImageWithPlaceholder } from './AddEmployeeSheet';
 
 const EditWorkdayScheduleSheet = ({ actionSheetRef, itemToEdit, ...props }) => {
   const [isDarkMode] = useMMKVStorage('isDarkMode', STORAGE, false);
   const appColors = useAppColors();
   const styles = useStyles(appColors);
+  const [user] = useMMKVStorage('user', STORAGE, {});
+  const [form, setForm] = useState({
+    image: null,
+    name: user?.name,
+    email: user?.email,
+    password: user?.password,
+    phone: user?.phone,
+  });
   return (
     <GlobalSheet actionSheetRef={actionSheetRef} {...props}>
       <View style={styles.AvatarContainer}>
-        <Image source={{ uri: itemToEdit?.image }} style={styles.avatar} />
+        <ImageWithPlaceholder
+          image={itemToEdit?.image}
+          style={styles.avatar}
+          size={70}
+          onPress={() => {}}
+        />
         <View style={styles.editIcon}>
           <SvgFromXml
             xml={!isDarkMode ? svgs.editIconLight : svgs.editIcon}
@@ -26,9 +40,13 @@ const EditWorkdayScheduleSheet = ({ actionSheetRef, itemToEdit, ...props }) => {
         </View>
       </View>
       <Label label={'Name'} />
-      <InputField value={itemToEdit?.name} placeholder={'Enter Name'} />
+      <InputField value={form?.name} placeholder={'Enter Name'} />
       <Label label={'Email'} />
-      <InputField value={itemToEdit?.email} placeholder={'Enter Email'} />
+      <InputField value={form?.email} placeholder={'Enter Email'} />
+      <Label label={'Password'} />
+      <InputField value={form?.password} placeholder={'Enter Password'} />
+      <Label label={'Phone'} />
+      <InputField value={form?.phone} placeholder={'Enter Phone'} />
     </GlobalSheet>
   );
 };

@@ -38,7 +38,8 @@ const Header = ({
         {label}
       </Text>
       {threeDotOptions ? (
-        <MenuComp options={threeDotOptions} />
+        // <MenuComp options={threeDotOptions} />
+        <View style={styles.threeDotIcon} />
       ) : (
         <View style={styles.threeDotIcon} />
       )}

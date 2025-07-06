@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import EmployeeItem from './EmployeeItem.js';
 import { context as contextConstants } from '../constants/constants';
+import useAppColors from '../assets/appColors.js';
 
-const DepartWiseEmployeeList = ({ data, context, onEdit }) => {
+const DepartWiseEmployeeList = ({ data, context, onEdit, loading }) => {
   const [closedDepartments, setClosedDepartments] = useState(new Set());
   const isShift = context === contextConstants.shift;
-
+  const appColors = useAppColors();
   const toggleDepartment = useCallback(id => {
     setClosedDepartments(prev => {
       const updated = new Set(prev);
@@ -42,6 +43,13 @@ const DepartWiseEmployeeList = ({ data, context, onEdit }) => {
       style={stylesObj.flatList}
       contentContainerStyle={stylesObj.flatListContent}
       showsVerticalScrollIndicator={false}
+      ListEmptyComponent={
+        loading ? (
+          <View style={stylesObj.loadingContainer}>
+            <ActivityIndicator size="large" color={appColors.primary} />
+          </View>
+        ) : null
+      }
     />
   );
 };
@@ -56,6 +64,11 @@ const getStyles = (isShift = false) =>
       gap: isShift ? 32 : 16,
       paddingTop: 8,
       paddingBottom: 92, // 16 + 76
+    },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
   });
 

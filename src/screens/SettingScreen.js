@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import React from 'react';
 
 const SettingScreen = () => {
@@ -10,5 +10,3 @@ const SettingScreen = () => {
 };
 
 export default SettingScreen;
-
-const styles = StyleSheet.create({});

@@ -5,10 +5,9 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Label from './Label';
 import { useAppColors } from '../assets/appColors';
 
-const DropDownPicker = ({ data, label }) => {
+const DropDownPicker = ({ data, label, value, setValue }) => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
-  const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -33,7 +32,7 @@ const DropDownPicker = ({ data, label }) => {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? 'Select item' : '...'}
+        placeholder={!isFocus ? 'Select ' + label : '...'}
         searchPlaceholder="Search..."
         value={value}
         onFocus={() => setIsFocus(true)}

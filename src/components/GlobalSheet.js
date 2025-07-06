@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useRef } from 'react';
 import ActionButton from './ActionButton';
 import { useAppColors } from '../assets/appColors';
+import Toast from 'react-native-toast-message';
 
 const GlobalSheet = ({
   secondaryButtonText,
@@ -10,14 +11,31 @@ const GlobalSheet = ({
   title,
   children,
   actionSheetRef,
+  onPrimaryButtonPress,
+  onSecondaryButtonPress,
+  primaryLoading,
+  onClose,
+  ...props
 }) => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
+  const handlePrimaryButtonPress = () => {
+    onPrimaryButtonPress?.();
+  };
+  const handleSecondaryButtonPress = () => {
+    onSecondaryButtonPress?.();
+    closeSheet();
+  };
   const closeSheet = () => {
     actionSheetRef.current?.hide();
   };
   return (
-    <ActionSheet overlayColor={appColors.overlayColor} ref={actionSheetRef}>
+    <ActionSheet
+      overlayColor={appColors.overlayColor}
+      ref={actionSheetRef}
+      onClose={onClose}
+      {...props}
+    >
       <View style={styles.actionSheet}>
         {title && <Text style={styles.title}>{title}</Text>}
         {children}
@@ -26,7 +44,7 @@ const GlobalSheet = ({
             <ActionButton
               style={styles.secondaryButton}
               label={secondaryButtonText}
-              onPress={closeSheet}
+              onPress={handleSecondaryButtonPress}
               secondary={true}
             />
           )}
@@ -34,11 +52,13 @@ const GlobalSheet = ({
             <ActionButton
               style={styles.primaryButton}
               label={primaryButtonText}
-              onPress={closeSheet}
+              onPress={handlePrimaryButtonPress}
+              loading={primaryLoading}
             />
           )}
         </View>
       </View>
+      <Toast />
     </ActionSheet>
   );
 };

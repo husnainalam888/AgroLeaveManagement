@@ -9,20 +9,26 @@ import React, { useState } from 'react';
 import { useAppColors } from '../assets/appColors';
 import DatePicker from '@react-native-community/datetimepicker';
 
-const DatePickerButton = () => {
+const DatePickerButton = ({ value, onDateChange }) => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
   const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
-  const [date, setDate] = useState(new Date());
+  const valueToDate = value ? new Date(value) : new Date();
+  console.log('DatePickerButton : valueToDate', value);
+  const [date, setDate] = useState(valueToDate);
   const formattedDate = date?.toLocaleDateString('en-US', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
   });
+  const dashFormattedDate = `${date.getFullYear()}-${
+    date.getMonth() + 1
+  }-${date.getDate()}`;
   const handleDatePicker = () => setIsDatePickerVisible(true);
   const handleDateChange = (event, selectedDate) => {
     setDate(selectedDate);
     setIsDatePickerVisible(false);
+    onDateChange(dashFormattedDate);
   };
   return (
     <>

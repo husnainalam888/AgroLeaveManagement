@@ -3,11 +3,11 @@ import React from 'react';
 import { SvgFromXml } from 'react-native-svg';
 import svgs from '../assets/svgs';
 import { useAppColors } from '../assets/appColors';
-const Fab = () => {
+const Fab = ({ onPress }) => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
   return (
-    <TouchableOpacity style={styles.fab}>
+    <TouchableOpacity style={styles.fab} onPress={onPress}>
       <SvgFromXml xml={svgs.pluseIcon} width={24} height={24} />
     </TouchableOpacity>
   );
