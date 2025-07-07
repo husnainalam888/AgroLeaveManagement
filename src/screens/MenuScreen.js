@@ -45,10 +45,11 @@ const MenuScreen = () => {
       formData.append('phone', requestData?.phone);
       formData.append('job_role', requestData?.job_role);
       formData.append('start_date', requestData?.start_date);
+      console.log('requestData', requestData);
       if (requestData?.image) {
         formData.append('image', {
           uri: requestData?.image?.uri,
-          name: requestData?.image?.name,
+          name: requestData?.image?.fileName,
           type: requestData?.image?.type,
         });
       }
@@ -126,7 +127,9 @@ const MenuScreen = () => {
         icon={<AntDesign name="logout" size={16} color={appColors.lightGray} />}
         label="Logout"
         onPress={() => {
+          const isDarkMode = STORAGE.getBool('isDarkMode');
           STORAGE.clearStore();
+          STORAGE.setBool('isDarkMode', isDarkMode);
           navigation.replace('Login');
         }}
       />

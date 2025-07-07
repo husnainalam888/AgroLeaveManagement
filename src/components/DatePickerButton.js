@@ -8,7 +8,9 @@ import {
 import React, { useState } from 'react';
 import { useAppColors } from '../assets/appColors';
 import DatePicker from '@react-native-community/datetimepicker';
-
+import { SvgFromXml } from 'react-native-svg';
+import svgs from '../assets/svgs';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 const DatePickerButton = ({ value, onDateChange }) => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
@@ -28,26 +30,34 @@ const DatePickerButton = ({ value, onDateChange }) => {
   const handleDateChange = (event, selectedDate) => {
     setDate(selectedDate);
     setIsDatePickerVisible(false);
-    onDateChange(dashFormattedDate);
+    onDateChange(
+      `${selectedDate.getFullYear()}-${
+        selectedDate.getMonth() + 1
+      }-${selectedDate.getDate()}`,
+    );
   };
   return (
     <>
       {Platform.OS == 'android' && (
         <TouchableOpacity style={styles.container} onPress={handleDatePicker}>
-          {<Text style={styles.text}>{date ? formattedDate : 'Today'}</Text>}
+          {/* {<Text style={styles.text}>{date ? formattedDate : 'Today'}</Text>} */}
+          <AntDesign name="calendar" size={24} color={appColors.lightGray} />
         </TouchableOpacity>
       )}
-      <DatePicker
-        mode="date"
-        value={date}
-        onChange={handleDateChange}
-        style={styles.datePicker}
-        // display="calendar"
-        textColor={appColors.black}
-        accentColor={appColors.primary}
-        themeVariant="dark"
-        locale="en_US"
-      />
+      {Platform.OS == 'ios' ||
+        (isDatePickerVisible && (
+          <DatePicker
+            mode="date"
+            value={date}
+            onChange={handleDateChange}
+            style={styles.datePicker}
+            // display="calendar"
+            textColor={appColors.black}
+            accentColor={appColors.primary}
+            themeVariant="dark"
+            locale="en_US"
+          />
+        ))}
     </>
   );
 };
@@ -59,7 +69,6 @@ const useStyles = appColors => {
     container: {
       alignItems: 'center',
       justifyContent: 'space-between',
-      backgroundColor: appColors.lightGray,
     },
     text: {
       fontSize: 16,

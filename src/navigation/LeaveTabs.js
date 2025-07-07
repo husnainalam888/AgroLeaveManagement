@@ -61,7 +61,7 @@ function LeaveTabsComponent() {
     tabBarPosition: 'top',
   };
   const addLeaveActionSheetRef = useRef(null);
-  const { getLeaveRequests, leaveRequests, handleAddLeave } =
+  const { getLeaveRequests, leaveRequests, handleAddLeave, addingLeave } =
     useLeaveRequests();
   useEffect(() => {
     getLeaveRequests();

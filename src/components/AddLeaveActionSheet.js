@@ -21,12 +21,13 @@ import showToast from '../utils/toast';
 import DropDownPicker from './DropDownPicker';
 import { pick } from '@react-native-documents/picker';
 
-const TAG = 'AddEmployeeSheet.js';
-const AddEmployeeSheet = ({
+const TAG = 'AddLeaveActionSheet.js';
+const AddLeaveActionSheet = ({
   actionSheetRef,
   itemToEdit,
   addingEmployee,
   onAddLeavePress,
+  primaryLoading,
   ...props
 }) => {
   const [form, setForm] = useState({
@@ -91,7 +92,7 @@ const AddEmployeeSheet = ({
   return (
     <GlobalSheet
       actionSheetRef={actionSheetRef}
-      primaryLoading={addingEmployee}
+      primaryLoading={primaryLoading}
       onPrimaryButtonPress={handleAddLeave}
       title={itemToEdit?.id ? 'Update Leave Request' : 'Add Leave Request'}
       primaryButtonText={itemToEdit?.id ? 'Update' : 'Add'}
@@ -102,7 +103,7 @@ const AddEmployeeSheet = ({
           : ['', '', ''];
 
         console.log(
-          'AddEmployeeSheet : onOpen : itemToEdit',
+          'AddLeaveActionSheet : onOpen : itemToEdit',
           year,
           month,
           day,
@@ -206,7 +207,7 @@ export const ImageWithPlaceholder = ({
   );
 };
 
-export default AddEmployeeSheet;
+export default AddLeaveActionSheet;
 
 const useStyles = appColors =>
   StyleSheet.create({

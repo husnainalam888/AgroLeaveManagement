@@ -128,6 +128,7 @@ const useStyles = colors =>
       paddingHorizontal: 16,
       paddingVertical: 16,
       zIndex: 1,
+      backgroundColor: colors.white,
     },
     roleContainer: {
       flexDirection: 'row',

@@ -21,7 +21,7 @@ import { STORAGE } from '../storage/STORAGE';
 import Label from './Label';
 import DatePickerButton from './DatePickerButton';
 import showToast from '../utils/toast';
-import ImagePicker from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 const TAG = 'AddEmployeeSheet.js';
 const AddEmployeeSheet = ({
@@ -106,7 +106,7 @@ const AddEmployeeSheet = ({
 
   const handleImageSelection = async () => {
     try {
-      const response = await ImagePicker.launchImageLibrary({
+      const response = await launchImageLibrary({
         selectionLimit: 1,
         mediaType: 'photo',
       });

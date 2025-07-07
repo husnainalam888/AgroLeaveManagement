@@ -23,6 +23,7 @@ export const LeaveRequestsProvider = ({ children }) => {
     'Employee',
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [addingLeave, setAddingLeave] = useState(false);
   const [user] = useMMKVStorage('user', STORAGE, {});
   const getLeaveRequests = async () => {
     if (selectedRole == 'Employee') {
@@ -122,7 +123,7 @@ export const LeaveRequestsProvider = ({ children }) => {
       if (requestData.note) formData.append('note', requestData.note);
       if (requestData?.document?.type)
         formData.append('document', requestData.document);
-      setIsLoading(true);
+      setAddingLeave(true);
       const response = await apiClient.post('employee/sick', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -143,7 +144,7 @@ export const LeaveRequestsProvider = ({ children }) => {
         error?.response?.data?.message || 'Something went wrong',
       );
     } finally {
-      setIsLoading(false);
+      setAddingLeave(false);
     }
   };
 
@@ -155,6 +156,7 @@ export const LeaveRequestsProvider = ({ children }) => {
         isLoading,
         handleStatusChange,
         handleAddLeave,
+        addingLeave,
       }}
     >
       {children}
