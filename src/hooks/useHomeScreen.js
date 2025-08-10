@@ -28,7 +28,8 @@ export const useHomeScreen = ({ actionSheetRef }) => {
           response.data?.map(employee => ({
             id: employee.role,
             heading:
-              employee.role.charAt(0).toUpperCase() + employee.role.slice(1),
+              employee?.role?.charAt?.(0)?.toUpperCase?.() +
+                employee?.role?.slice?.(1) || 'Employee',
             subList: employee.employees.map(emp => ({
               id: emp.id,
               heading: emp.name,

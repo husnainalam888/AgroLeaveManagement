@@ -4,12 +4,16 @@ import AppNavigator from './src/navigation/AppNavigator';
 import { MenuProvider } from 'react-native-popup-menu';
 import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { StatusBar } from 'react-native';
+import { useMMKVStorage } from 'react-native-mmkv-storage';
+import { STORAGE } from './src/storage/STORAGE';
 
 export default function App() {
+  const [isDarkMode] = useMMKVStorage('isDarkMode', STORAGE, false);
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'transparent' }}>
-      <StatusBar barStyle="dark-content" />
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: isDarkMode ? '#000' : '#fff' }}
+    >
       <MenuProvider>
         <NavigationContainer>
           <AppNavigator />

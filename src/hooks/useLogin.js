@@ -17,7 +17,7 @@ export const useLogin = ({ selectedRole }) => {
     console.log(`[useLogin] [handleLogin] success`);
     showToast.success('Login Successful', 'Welcome back!');
     setAuth(response);
-    setUser(response.data);
+    setUser({ ...response.data, role: response?.data?.user_type });
     navigation.replace('BottomTabs');
   };
 
