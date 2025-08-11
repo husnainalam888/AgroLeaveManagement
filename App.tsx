@@ -6,6 +6,7 @@ import Toast from 'react-native-toast-message';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMMKVStorage } from 'react-native-mmkv-storage';
 import { STORAGE } from './src/storage/STORAGE';
+import { StatusBar } from 'react-native';
 
 export default function App() {
   const [isDarkMode] = useMMKVStorage('isDarkMode', STORAGE, false);
@@ -14,6 +15,7 @@ export default function App() {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: isDarkMode ? '#000' : '#fff' }}
     >
+      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <MenuProvider>
         <NavigationContainer>
           <AppNavigator />

@@ -2,11 +2,12 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/auth/LoginScreen';
 import BottomTabs from './BottomTabs.tsx';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useAppColors } from '../assets/appColors.js';
 import EmployeeCalander from '../screens/EmployeeCalander';
 import { STORAGE } from '../storage/STORAGE.js';
 import { useMMKVStorage } from 'react-native-mmkv-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
