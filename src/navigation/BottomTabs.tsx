@@ -22,7 +22,10 @@ export default function BottomTabs() {
       tabBar={props => <CustomBottomTabBarItem {...props} />}
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: appColors.white, paddingTop: 16 },
+        sceneStyle: {
+          backgroundColor: appColors.white,
+          paddingTop: 16,
+        },
       }}
     >
       {selectedRole == 'Employer' && (

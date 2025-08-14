@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   ActivityIndicator,
+  View,
 } from 'react-native';
 import { useAppColors } from '../assets/appColors';
 
@@ -16,6 +17,7 @@ export default function ActionButton({
   loading,
   disabled,
   primaryOutline,
+  icon,
 }) {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
@@ -31,18 +33,30 @@ export default function ActionButton({
       ]}
       onPress={!loading && !disabled ? onPress : undefined}
     >
-      {loading && <ActivityIndicator size="small" color={appColors.white} />}
-
-      <Text
-        style={[
-          styles.text,
-          secondary && styles.secondaryText,
-          small && styles.smallText,
-          primaryOutline && styles.primaryOutlineText,
-        ]}
-      >
-        {label}
-      </Text>
+      <View style={styles.content}>
+        <Text
+          style={[
+            styles.text,
+            secondary && styles.secondaryText,
+            small && styles.smallText,
+            primaryOutline && styles.primaryOutlineText,
+          ]}
+        >
+          {label}
+        </Text>
+        {icon && !loading && (
+          <Text
+            style={[
+              styles.icon,
+              secondary && styles.secondaryIcon,
+              primaryOutline && styles.primaryOutlineIcon,
+            ]}
+          >
+            {icon}
+          </Text>
+        )}
+        {loading && <ActivityIndicator size="small" color={appColors.white} />}
+      </View>
     </TouchableOpacity>
   );
 }
@@ -55,9 +69,13 @@ const useStyles = appColors => {
       borderRadius: 30,
       alignItems: 'center',
       marginVertical: 8,
-      flexDirection: 'row',
       justifyContent: 'center',
-      gap: 10,
+    },
+    content: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
     },
     secondary: {
       borderWidth: 1,
@@ -82,6 +100,17 @@ const useStyles = appColors => {
       color: appColors.primary,
     },
     primaryOutlineText: {
+      color: appColors.primary,
+    },
+    icon: {
+      color: appColors.white,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    secondaryIcon: {
+      color: appColors.darkGray,
+    },
+    primaryOutlineIcon: {
       color: appColors.primary,
     },
   });

@@ -11,6 +11,8 @@ import {
   Keyboard,
   Dimensions,
   TouchableOpacity,
+  Text,
+  ActivityIndicator,
 } from 'react-native';
 import { useAppColors } from '../assets/appColors';
 import { SvgFromXml } from 'react-native-svg';
@@ -236,9 +238,10 @@ export const ImageWithPlaceholder = ({
 }) => {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
+  const [errorLoading, setErrorLoading] = useState(false);
   return (
     <View style={[styles.AvatarContainer, containerStyle]}>
-      {image ? (
+      {image && !errorLoading ? (
         <Image
           source={{
             uri:
@@ -248,6 +251,7 @@ export const ImageWithPlaceholder = ({
                 : image),
           }}
           style={[styles.avatar, style]}
+          onError={() => setErrorLoading(true)}
         />
       ) : (
         <View style={[styles.avatar, style]}>
@@ -288,8 +292,6 @@ const useStyles = appColors =>
       width: 100,
       height: 100,
       borderRadius: 50,
-      borderWidth: 1,
-      borderColor: appColors.accent,
       justifyContent: 'center',
       alignItems: 'center',
     },

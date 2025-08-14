@@ -34,9 +34,7 @@ const Header = ({
       {!backButton && (
         <Image source={require('../assets/Logo.png')} style={styles.logo} />
       )}
-      <Text style={[styles.label, !threeDotOptions && { marginLeft: -24 }]}>
-        {label}
-      </Text>
+      <Text style={[styles.label, { marginLeft: -34 }]}>{label}</Text>
       {threeDotOptions ? (
         // <MenuComp options={threeDotOptions} />
         <View style={styles.threeDotIcon} />

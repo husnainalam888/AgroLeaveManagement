@@ -1,5 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import OnboardingScreen from '../screens/auth/OnboardingScreen';
+import RoleSelectionScreen from '../screens/auth/RoleSelectionScreen';
 import LoginScreen from '../screens/auth/LoginScreen';
 import BottomTabs from './BottomTabs.tsx';
 import { StyleSheet, View } from 'react-native';
@@ -14,23 +16,44 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   const appColors = useAppColors();
   const styles = useStyles(appColors);
-  const [user, setUser] = useMMKVStorage('user', STORAGE, {});
-  const [selectedRole, setSelectedRole] = useMMKVStorage(
-    'selectedRole',
+  const [user] = useMMKVStorage('user', STORAGE, {});
+  const [onboardingCompleted] = useMMKVStorage(
+    'onboardingCompleted',
     STORAGE,
-    'Employee',
+    false,
   );
+  const [selectedRole] = useMMKVStorage('selectedRole', STORAGE, null);
+
+  // Determine initial route based on user state
+  const getInitialRouteName = () => {
+    if (user && typeof user === 'object' && 'id' in user && user.id) {
+      return 'BottomTabs';
+    }
+    if (!onboardingCompleted) {
+      return 'Onboarding';
+    }
+    if (!selectedRole) {
+      return 'RoleSelection';
+    }
+    return 'Login';
+  };
+
   console.log('user', user);
+  console.log('onboardingCompleted', onboardingCompleted);
+  console.log('selectedRole', selectedRole);
+
   return (
     <SafeAreaView style={styles.SafeAreaView}>
       <View style={styles.View}>
         <Stack.Navigator
-          initialRouteName={user?.id ? 'BottomTabs' : 'Login'}
+          initialRouteName={getInitialRouteName()}
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: appColors.white },
           }}
         >
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          <Stack.Screen name="RoleSelection" component={RoleSelectionScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="BottomTabs" component={BottomTabs} />
           <Stack.Screen name="EmployeeCalander" component={EmployeeCalander} />
@@ -40,7 +63,7 @@ export default function AppNavigator() {
   );
 }
 
-const useStyles = appColors => {
+const useStyles = (appColors: any) => {
   return StyleSheet.create({
     SafeAreaView: {
       flex: 1,

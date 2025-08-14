@@ -9,7 +9,7 @@ const dark = {
   gray: '#D1D1D1',
   darkGray: '#777',
   lightGray: '#f5f5f5',
-  primary: 'gold',
+  primary: '#efcb00',
   accent: '#ffffff26',
   secondary: '#2D2D2D',
   unFocus: `#D4D4D4`,

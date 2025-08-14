@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Platform,
 } from 'react-native';
 import { SvgFromXml } from 'react-native-svg';
 import svgs from '../assets/svgs';
@@ -87,7 +88,8 @@ const useStyles = appColors => {
       flexDirection: 'row',
       borderWidth: 1,
       borderColor: '#ccc',
-      padding: 12,
+      paddingHorizontal: 12,
+      paddingVertical: Platform.OS === 'ios' ? 12 : 6,
       borderRadius: 10,
       alignItems: 'center',
     },
