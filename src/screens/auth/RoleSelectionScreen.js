@@ -73,7 +73,13 @@ export default function RoleSelectionScreen({ navigation }) {
         }),
       ]),
     ]).start();
-  }, []);
+  }, [
+    fadeAnim,
+    slideAnimHeader,
+    slideAnimEmployee,
+    slideAnimEmployer,
+    slideAnimButton,
+  ]);
 
   useEffect(() => {
     if (selectedRole) {
@@ -94,7 +100,7 @@ export default function RoleSelectionScreen({ navigation }) {
         { iterations: 3 },
       ).start();
     }
-  }, [selectedRole]);
+  }, [selectedRole, pulseAnim]);
 
   const handleContinue = () => {
     if (selectedRole) {
@@ -437,7 +443,7 @@ const useStyles = appColors =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#F8FAFC',
+      backgroundColor: appColors.background,
     },
     scrollContainer: {
       flex: 1,
@@ -455,11 +461,11 @@ const useStyles = appColors =>
       width: 70,
       height: 70,
       borderRadius: 35,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.cardBackground,
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: 24,
-      shadowColor: appColors.black,
+      shadowColor: appColors.shadowColor,
       shadowOffset: {
         width: 0,
         height: 2,
@@ -475,13 +481,13 @@ const useStyles = appColors =>
     title: {
       fontSize: 32,
       fontWeight: '700',
-      color: '#1A202C',
+      color: appColors.textPrimary,
       marginBottom: 8,
       textAlign: 'center',
     },
     subtitle: {
       fontSize: 16,
-      color: '#718096',
+      color: appColors.textSecondary,
       textAlign: 'center',
       lineHeight: 24,
       maxWidth: width * 0.8,
@@ -491,12 +497,12 @@ const useStyles = appColors =>
       paddingBottom: 100, // Space for fixed button
     },
     roleCard: {
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.cardBackground,
       borderRadius: 20,
       padding: 0,
       borderWidth: 2,
-      borderColor: '#E2E8F0',
-      shadowColor: appColors.black,
+      borderColor: appColors.borderLight,
+      shadowColor: appColors.shadowColor,
       shadowOffset: {
         width: 0,
         height: 4,
@@ -531,7 +537,7 @@ const useStyles = appColors =>
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: '#EBF8FF',
+      backgroundColor: appColors.employeeIconBg,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -539,7 +545,7 @@ const useStyles = appColors =>
       width: 60,
       height: 60,
       borderRadius: 30,
-      backgroundColor: '#F0FFF4',
+      backgroundColor: appColors.employerIconBg,
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -566,20 +572,20 @@ const useStyles = appColors =>
     roleTitle: {
       fontSize: 26,
       fontWeight: '700',
-      color: '#2D3748',
+      color: appColors.textPrimary,
       marginBottom: 12,
     },
     selectedRoleTitle: {
-      color: '#2D3748',
+      color: appColors.textPrimary,
     },
     roleDescription: {
       fontSize: 16,
-      color: '#718096',
+      color: appColors.textSecondary,
       lineHeight: 24,
       marginBottom: 20,
     },
     selectedRoleDescription: {
-      color: '#718096',
+      color: appColors.textSecondary,
     },
     featuresContainer: {
       gap: 12,
@@ -597,25 +603,25 @@ const useStyles = appColors =>
     },
     featureText: {
       fontSize: 15,
-      color: '#4A5568',
+      color: appColors.textTertiary,
       fontWeight: '500',
       flex: 1,
     },
     selectedFeatureText: {
-      color: '#4A5568',
+      color: appColors.textTertiary,
     },
     bottomContainer: {
       position: 'absolute',
       bottom: 0,
       left: 0,
       right: 0,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.cardBackground,
       paddingHorizontal: 20,
       paddingTop: 16,
-      paddingBottom: 40,
+      paddingBottom: 16,
       borderTopWidth: 1,
-      borderTopColor: '#E2E8F0',
-      shadowColor: appColors.black,
+      borderTopColor: appColors.dividerColor,
+      shadowColor: appColors.shadowColor,
       shadowOffset: {
         width: 0,
         height: -2,
@@ -627,7 +633,7 @@ const useStyles = appColors =>
     continueButton: {
       backgroundColor: appColors.primary,
       borderRadius: 16,
-      paddingVertical: 18,
+      paddingVertical: 14,
       justifyContent: 'center',
       alignItems: 'center',
       shadowColor: appColors.primary,
@@ -640,7 +646,7 @@ const useStyles = appColors =>
       elevation: 6,
     },
     disabledButton: {
-      backgroundColor: '#CBD5E0',
+      backgroundColor: appColors.disabledBg,
       shadowOpacity: 0,
       elevation: 0,
     },
@@ -650,7 +656,7 @@ const useStyles = appColors =>
       fontWeight: '700',
     },
     disabledButtonText: {
-      color: '#A0AEC0',
+      color: appColors.disabledText,
     },
     buttonContent: {
       flexDirection: 'row',
@@ -665,6 +671,6 @@ const useStyles = appColors =>
       marginLeft: 4,
     },
     disabledArrowIcon: {
-      color: '#A0AEC0',
+      color: appColors.disabledText,
     },
   });

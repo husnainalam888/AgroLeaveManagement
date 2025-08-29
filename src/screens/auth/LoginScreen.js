@@ -60,7 +60,7 @@ export default function LoginScreen({ navigation }) {
         useNativeDriver: true,
       }),
     ]).start();
-  }, []);
+  }, [fadeIn, headerSlide, formSlide]);
 
   const onLoginPress = () => {
     Animated.sequence([
@@ -180,11 +180,11 @@ export default function LoginScreen({ navigation }) {
                   />
                 </View>
 
-                <TouchableOpacity style={styles.forgotPasswordContainer}>
+                {/* <TouchableOpacity style={styles.forgotPasswordContainer}>
                   <Text style={styles.forgotPasswordText}>
                     Forgot Password?
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
 
                 <Animated.View style={{ transform: [{ scale: buttonScale }] }}>
                   <ActionButton
@@ -208,7 +208,7 @@ const useStyles = colors =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: colors.white,
+      backgroundColor: colors.background,
     },
     keyboardAvoidingView: {
       flex: 1,
@@ -227,11 +227,11 @@ const useStyles = colors =>
       width: 90,
       height: 90,
       borderRadius: 45,
-      backgroundColor: colors.white,
+      backgroundColor: colors.cardBackground,
       justifyContent: 'center',
       alignItems: 'center',
       marginBottom: 20,
-      shadowColor: colors.black,
+      shadowColor: colors.shadowColor,
       shadowOffset: {
         width: 0,
         height: 6,
@@ -247,19 +247,19 @@ const useStyles = colors =>
     brandName: {
       fontSize: 32,
       fontWeight: '900',
-      color: '#1A202C',
+      color: colors.textPrimary,
       letterSpacing: 0.5,
       marginBottom: 8,
     },
     welcomeText: {
       fontSize: 28,
       fontWeight: '700',
-      color: '#2D3748',
+      color: colors.welcomeTextColor,
       marginBottom: 12,
     },
     subtitle: {
       fontSize: 16,
-      color: '#718096',
+      color: colors.subtitleColor,
       textAlign: 'center',
       maxWidth: 280,
       lineHeight: 22,
@@ -271,14 +271,14 @@ const useStyles = colors =>
       width: '100%',
     },
     roleIndicator: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.cardBackground,
       borderRadius: 16,
       paddingVertical: 16,
       paddingHorizontal: 18,
       marginBottom: 28,
       borderWidth: 1,
-      borderColor: '#E2E8F0',
-      shadowColor: colors.black,
+      borderColor: colors.roleIndicatorBorder,
+      shadowColor: colors.shadowColor,
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.06,
       shadowRadius: 8,
@@ -288,42 +288,48 @@ const useStyles = colors =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
+      gap: 12,
     },
     roleIndicatorLeft: {
       flexDirection: 'row',
       alignItems: 'center',
       flex: 1,
       gap: 14,
+      minWidth: 0, // Allow text to shrink properly
     },
     roleBadge: {
       width: 44,
       height: 44,
       borderRadius: 22,
-      backgroundColor: '#FFF8E1',
+      backgroundColor: colors.roleBadgeBg,
       alignItems: 'center',
       justifyContent: 'center',
       borderWidth: 2,
       borderColor: colors.primary,
+      flexShrink: 0, // Prevent icon from shrinking
     },
     roleEmoji: {
       fontSize: 20,
     },
     roleIndicatorText: {
-      color: '#2D3748',
-      fontSize: 16,
+      color: colors.roleIndicatorTextColor,
+      fontSize: 13,
       fontWeight: '700',
       marginBottom: 2,
+      flexShrink: 1, // Allow text to shrink if needed
     },
     roleSubtext: {
-      color: '#718096',
-      fontSize: 13,
+      color: colors.roleSubtextColor,
+      fontSize: 12,
       fontWeight: '500',
+      flexShrink: 1, // Allow text to shrink if needed
     },
     changeRoleButton: {
       backgroundColor: colors.primary,
       paddingHorizontal: 16,
       paddingVertical: 8,
       borderRadius: 20,
+      flexShrink: 0, // Prevent button from shrinking
     },
     changeRoleText: {
       color: colors.white,
@@ -334,16 +340,16 @@ const useStyles = colors =>
       flex: 1,
     },
     formCard: {
-      backgroundColor: colors.white,
+      backgroundColor: colors.cardBackground,
       borderRadius: 20,
       padding: 24,
-      shadowColor: colors.black,
+      shadowColor: colors.shadowColor,
       shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.1,
       shadowRadius: 16,
       elevation: 8,
       borderWidth: 1,
-      borderColor: '#F1F5F9',
+      borderColor: colors.borderLight,
     },
     formHeader: {
       marginBottom: 28,
@@ -352,18 +358,18 @@ const useStyles = colors =>
     formTitle: {
       fontSize: 24,
       fontWeight: '800',
-      color: '#1A202C',
+      color: colors.formTitleColor,
       marginBottom: 6,
     },
     formSubtitle: {
       fontSize: 15,
-      color: '#718096',
+      color: colors.formSubtitleColor,
       textAlign: 'center',
       lineHeight: 20,
     },
     inputContainer: {
       marginBottom: 24,
-      gap: 4,
+      gap: 8,
     },
     forgotPasswordContainer: {
       alignSelf: 'flex-end',
@@ -372,7 +378,7 @@ const useStyles = colors =>
       paddingVertical: 4,
     },
     forgotPasswordText: {
-      color: colors.primary,
+      color: colors.forgotPasswordColor,
       fontSize: 14,
       fontWeight: '600',
     },

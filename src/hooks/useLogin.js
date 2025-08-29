@@ -18,7 +18,7 @@ export const useLogin = ({ selectedRole }) => {
     showToast.success('Login Successful', 'Welcome back!');
     setAuth(response);
     setUser({ ...response.data, role: response?.data?.user_type });
-    navigation.replace('BottomTabs');
+    navigation.reset({ index: 0, routes: [{ name: 'BottomTabs' }] });
   };
 
   const checkValidation = () => {

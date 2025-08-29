@@ -26,7 +26,7 @@ const DropDownPicker = ({ data, label, value, setValue }) => {
         itemContainerStyle={styles.itemContainerStyle}
         itemTextStyle={styles.itemTextStyle}
         data={data}
-        activeColor={appColors.darkGray}
+        activeColor={appColors.primary}
         mode="auto"
         search
         maxHeight={300}

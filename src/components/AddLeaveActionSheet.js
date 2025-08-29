@@ -171,7 +171,7 @@ const AddLeaveActionSheet = ({
             value={form.note}
             onChangeText={text => setForm({ ...form, note: text })}
             placeholder="Enter Notes"
-            textArea
+            textArea={true}
           />
           <Label label="Document" />
           <InputField

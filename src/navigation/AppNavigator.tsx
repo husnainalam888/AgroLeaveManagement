@@ -43,26 +43,23 @@ export default function AppNavigator() {
   console.log('selectedRole', selectedRole);
 
   return (
-    <SafeAreaView style={styles.SafeAreaView}>
-      <View style={styles.View}>
-        <Stack.Navigator
-          initialRouteName={getInitialRouteName()}
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: appColors.white },
-          }}
-        >
-          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-          <Stack.Screen name="RoleSelection" component={RoleSelectionScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="BottomTabs" component={BottomTabs} />
-          <Stack.Screen name="EmployeeCalander" component={EmployeeCalander} />
-        </Stack.Navigator>
-      </View>
-    </SafeAreaView>
+    <View style={styles.View}>
+      <Stack.Navigator
+        initialRouteName={getInitialRouteName()}
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: appColors.white },
+        }}
+      >
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        <Stack.Screen name="RoleSelection" component={RoleSelectionScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="BottomTabs" component={BottomTabs} />
+        <Stack.Screen name="EmployeeCalander" component={EmployeeCalander} />
+      </Stack.Navigator>
+    </View>
   );
 }
-
 const useStyles = (appColors: any) => {
   return StyleSheet.create({
     SafeAreaView: {

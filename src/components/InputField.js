@@ -53,7 +53,10 @@ export default function InputField({
         <TextInput
           multiline={textArea}
           placeholder={placeholder}
-          style={[styles.input, textArea && { height: 100 }]}
+          style={[
+            styles.input,
+            textArea && { height: 100, textAlignVertical: 'top' },
+          ]}
           secureTextEntry={showPassword}
           placeholderTextColor={appColors.gray}
           value={value}
@@ -63,7 +66,7 @@ export default function InputField({
         />
       ) : (
         <View style={{ flex: 1 }}>
-          <Text style={[styles.input, { flex: 1 }]}>
+          <Text style={[styles.input, { flex: 1, paddingVertical: 12 }]}>
             {value || placeholder}
           </Text>
         </View>

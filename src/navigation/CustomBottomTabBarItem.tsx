@@ -112,7 +112,7 @@ const useStyles = (appColors: any) => {
     container: {
       alignItems: 'center',
       paddingHorizontal: 12,
-      paddingVertical: 8,
+      paddingVertical: 4,
       borderRadius: 16,
       minWidth: 60,
       position: 'relative',
@@ -127,7 +127,6 @@ const useStyles = (appColors: any) => {
       height: 32,
       justifyContent: 'center',
       alignItems: 'center',
-      marginBottom: 4,
       backgroundColor: 'transparent',
     },
     focusedIconContainer: {
@@ -138,7 +137,6 @@ const useStyles = (appColors: any) => {
       color: '#8E8E93',
       fontWeight: '500',
       textAlign: 'center',
-      marginTop: 2,
     },
     focusedLabel: {
       color: appColors.primary,

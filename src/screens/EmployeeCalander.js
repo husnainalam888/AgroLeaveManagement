@@ -140,7 +140,8 @@ const useStyles = appColors =>
   StyleSheet.create({
     container: {
       flex: 1,
-      padding: 16,
+      paddingHorizontal: 16,
+      paddingTop: 16,
     },
     calendar: {
       marginHorizontal: -16,

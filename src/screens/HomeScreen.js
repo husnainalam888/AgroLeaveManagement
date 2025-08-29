@@ -19,6 +19,34 @@ import { useHomeScreen } from '../hooks/useHomeScreen';
 import AddEmployeeSheet from '../components/AddEmployeeSheet';
 import { SingleEmployeeItem } from '../components/EmployeeList';
 
+// Shimmer Component
+const ShimmerItem = ({ appColors }) => {
+  const styles = useShimmerStyles(appColors);
+  return (
+    <View style={styles.shimmerContainer}>
+      <View style={styles.shimmerCard}>
+        <View style={styles.shimmerAvatar} />
+        <View style={styles.shimmerContent}>
+          <View style={styles.shimmerName} />
+          <View style={styles.shimmerEmail} />
+        </View>
+        <View style={styles.shimmerDepartment} />
+      </View>
+    </View>
+  );
+};
+
+const ShimmerList = ({ appColors, count = 6 }) => {
+  const styles = useShimmerStyles(appColors);
+  return (
+    <View style={styles.shimmerList}>
+      {Array.from({ length: count }).map((_, index) => (
+        <ShimmerItem key={index} appColors={appColors} />
+      ))}
+    </View>
+  );
+};
+
 export const departWiseEmployeeList = [
   {
     id: 1,
@@ -225,6 +253,16 @@ const HomeScreen = () => {
     </View>
   );
 
+  // Show shimmer while loading
+  if (loadingEmployeeList) {
+    return (
+      <View style={styles.flatListContent}>
+        {renderHeader()}
+        <ShimmerList appColors={appColors} count={8} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -232,7 +270,7 @@ const HomeScreen = () => {
         keyExtractor={item => item.id.toString()}
         renderItem={renderEmployee}
         ListHeaderComponent={renderHeader}
-        ListEmptyComponent={!loadingEmployeeList ? renderEmptyState : null}
+        ListEmptyComponent={renderEmptyState}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.flatListContent,
@@ -462,6 +500,61 @@ const useStyles = appColors => {
       backgroundColor: appColors.primary,
       justifyContent: 'center',
       alignItems: 'center',
+    },
+  });
+};
+
+const useShimmerStyles = appColors => {
+  return StyleSheet.create({
+    shimmerContainer: {
+      marginBottom: 16,
+    },
+    shimmerCard: {
+      backgroundColor: appColors.white,
+      borderRadius: 16,
+      padding: 16,
+      elevation: 3,
+      shadowColor: appColors.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 6,
+      borderWidth: 1,
+      borderColor: appColors.borderColor + '40',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    shimmerAvatar: {
+      width: 50,
+      height: 50,
+      borderRadius: 25,
+      backgroundColor: appColors.borderColor + '20',
+      marginRight: 12,
+    },
+    shimmerContent: {
+      flex: 1,
+    },
+    shimmerName: {
+      width: '80%',
+      height: 20,
+      backgroundColor: appColors.borderColor + '20',
+      borderRadius: 8,
+      marginBottom: 4,
+    },
+    shimmerEmail: {
+      width: '60%',
+      height: 16,
+      backgroundColor: appColors.borderColor + '20',
+      borderRadius: 8,
+    },
+    shimmerDepartment: {
+      width: 80,
+      height: 20,
+      backgroundColor: appColors.borderColor + '20',
+      borderRadius: 8,
+      marginLeft: 'auto',
+    },
+    shimmerList: {
+      marginTop: 16,
     },
   });
 };
