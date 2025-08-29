@@ -9,9 +9,9 @@ import {
   Dimensions,
   Platform,
   StatusBar,
+  Image,
 } from 'react-native';
 import React, { useRef, useState, useMemo } from 'react';
-// LinearGradient removed - using regular styling instead
 import Icon from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAppColors } from '../assets/appColors';
@@ -46,64 +46,7 @@ const ShimmerList = ({ appColors, count = 6 }) => {
     </View>
   );
 };
-
-export const departWiseEmployeeList = [
-  {
-    id: 1,
-    heading: 'Product',
-    subList: [
-      {
-        id: 1,
-        heading: 'Jennie Nolan',
-        label: 'jennie.nolan@example.com',
-        image:
-          'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXZhdGFyfGVufDB8fDB8fHww',
-      },
-      {
-        id: 2,
-        heading: 'Will Smith',
-        label: 'will.smith@example.com',
-        image:
-          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      },
-      {
-        id: 3,
-        heading: 'Emma Watson',
-        label: 'emma.watson@example.com',
-        image:
-          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      },
-    ],
-  },
-  {
-    id: 2,
-    heading: 'Marketing',
-    subList: [
-      {
-        id: 7,
-        heading: 'Nova Peris',
-        label: 'nova.peris@example.com',
-        image:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      },
-
-      {
-        id: 4,
-        heading: 'James Doe',
-        label: 'james.doe@example.com',
-        image:
-          'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      },
-      {
-        id: 6,
-        heading: 'Tom Hardy',
-        label: 'tom.hardy@example.com',
-        image:
-          'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      },
-    ],
-  },
-];
+import Logo from '../assets/Logo.png';
 const { width } = Dimensions.get('window');
 
 const ItemSeparator = () => <View style={{ height: 16 }} />;
@@ -116,6 +59,8 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('all');
 
   const {
     employeeList,
@@ -163,12 +108,59 @@ const HomeScreen = () => {
     setRefreshing(false);
   };
 
+  const handleFilterPress = () => {
+    setShowFilters(!showFilters);
+  };
+
+  const handleFilterChange = filter => {
+    setSelectedFilter(filter);
+    setShowFilters(false);
+  };
+
+  const getFilteredEmployees = () => {
+    if (selectedFilter === 'all') return filteredEmployees;
+    return filteredEmployees.filter(emp => emp.department === selectedFilter);
+  };
+
   const renderEmployee = ({ item, index }) => (
     <View style={styles.employeeItemContainer}>
       <View style={styles.employeeCard}>
-        <SingleEmployeeItem item={item} onEdit={handleEditEmployee} />
-        <View style={styles.departmentTag}>
-          <Text style={styles.departmentText}>{item.department}</Text>
+        <View style={styles.employeeCardContent}>
+          {/* Avatar Section */}
+          <View style={styles.avatarSection}>
+            <View style={styles.avatarContainer}>
+              <Icon name="person" size={24} color={appColors.gray} />
+            </View>
+          </View>
+
+          {/* Employee Info */}
+          <View style={styles.employeeInfo}>
+            <Text style={styles.employeeName} numberOfLines={1}>
+              {item.heading}
+            </Text>
+            <Text style={styles.employeeEmail} numberOfLines={1}>
+              {item.label}
+            </Text>
+            <View style={styles.employeeMeta}>
+              <Icon name="calendar-outline" size={14} color={appColors.gray} />
+              <Text style={styles.employeeMetaText}>
+                {item.start_date || 'Start Date'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Actions Section */}
+          <View style={styles.actionsSection}>
+            <View style={styles.roleTag}>
+              <Text style={styles.roleText}>{item.department}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.editButton}
+              onPress={() => handleEditEmployee(item)}
+            >
+              <Icon name="create-outline" size={18} color={appColors.primary} />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -176,54 +168,99 @@ const HomeScreen = () => {
 
   const renderHeader = () => (
     <View style={styles.headerContainer}>
-      <View style={styles.gradientHeader}>
-        <View style={styles.headerContent}>
-          <View style={styles.titleContainer}>
-            <Icon name="people" size={28} color={appColors.primary} />
-            <Text style={styles.headerTitle}>Employees</Text>
-            <View style={styles.employeeCount}>
-              <Text style={styles.employeeCountText}>
-                {flatEmployeeList.length}
-              </Text>
+      {/* Main Header */}
+      <View style={styles.mainHeader}>
+        <View style={styles.headerTop}>
+          <View style={styles.titleSection}>
+            <View style={styles.titleRow}>
+              <Image source={Logo} style={styles.logo} resizeMode="contain" />
+              <Text style={styles.headerTitle}>Employees</Text>
+              <View style={styles.headerActions}>
+                <TouchableOpacity
+                  style={styles.actionButton}
+                  onPress={() => handleFilterPress()}
+                >
+                  <Icon name="filter" size={20} color={appColors.black} />
+                </TouchableOpacity>
+              </View>
             </View>
+            <Text style={styles.headerSubtitle}>Manage your team members</Text>
           </View>
         </View>
 
-        {/* Enhanced Search Bar */}
-        <View
-          style={[
-            styles.searchContainer,
-            {
-              borderColor: isSearchFocused
-                ? appColors.primary
-                : appColors.borderColor,
-              borderWidth: isSearchFocused ? 2 : 1,
-            },
-          ]}
-        >
-          <Icon
-            name="search"
-            size={20}
-            color={isSearchFocused ? appColors.primary : appColors.gray}
-            style={styles.searchIcon}
-          />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search employees, departments..."
-            placeholderTextColor={appColors.gray}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            onFocus={() => setIsSearchFocused(true)}
-            onBlur={() => setIsSearchFocused(false)}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity
-              onPress={() => setSearchQuery('')}
-              style={styles.clearButton}
-            >
-              <Icon name="close-circle" size={20} color={appColors.gray} />
-            </TouchableOpacity>
-          )}
+        {/* Stats Row */}
+        <View style={styles.statsRow}>
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>{flatEmployeeList.length}</Text>
+            <Text style={styles.statLabel}>Total</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>
+              {
+                flatEmployeeList.filter(emp => emp.department === 'Manager')
+                  .length
+              }
+            </Text>
+            <Text style={styles.statLabel}>Managers</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <Text style={styles.statNumber}>
+              {
+                flatEmployeeList.filter(emp => emp.department === 'Employee')
+                  .length
+              }
+            </Text>
+            <Text style={styles.statLabel}>Employees</Text>
+          </View>
+        </View>
+
+        {/* Search Bar */}
+        <View style={styles.searchWrapper}>
+          <View
+            style={[
+              styles.searchContainer,
+              {
+                borderColor: isSearchFocused
+                  ? appColors.primary
+                  : appColors.borderLight + '40',
+                backgroundColor: isSearchFocused
+                  ? appColors.cardBackground
+                  : appColors.searchBackground,
+              },
+            ]}
+          >
+            <Icon
+              name="search"
+              size={20}
+              color={
+                isSearchFocused ? appColors.primary : appColors.textSecondary
+              }
+              style={styles.searchIcon}
+            />
+            <TextInput
+              style={[styles.searchInput, { color: appColors.textPrimary }]}
+              placeholder="Search by name, email, or role..."
+              placeholderTextColor={appColors.textTertiary}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+            />
+            {searchQuery.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setSearchQuery('')}
+                style={styles.clearButton}
+              >
+                <Icon
+                  name="close-circle"
+                  size={20}
+                  color={appColors.textSecondary}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
 
         {/* Search Results Count */}
@@ -233,6 +270,77 @@ const HomeScreen = () => {
               {filteredEmployees.length} result
               {filteredEmployees.length !== 1 ? 's' : ''} found
             </Text>
+          </View>
+        )}
+
+        {/* Filter Dropdown */}
+        {showFilters && (
+          <View style={styles.filterDropdown}>
+            <TouchableOpacity
+              style={[
+                styles.filterOption,
+                selectedFilter === 'all' && styles.filterOptionActive,
+              ]}
+              onPress={() => handleFilterChange('all')}
+            >
+              <Text
+                style={[
+                  styles.filterOptionText,
+                  selectedFilter === 'all' && styles.filterOptionTextActive,
+                ]}
+              >
+                All Employees
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterOption,
+                selectedFilter === 'Manager' && styles.filterOptionActive,
+              ]}
+              onPress={() => handleFilterChange('Manager')}
+            >
+              <Text
+                style={[
+                  styles.filterOptionText,
+                  selectedFilter === 'Manager' && styles.filterOptionTextActive,
+                ]}
+              >
+                Managers
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterOption,
+                selectedFilter === 'Employee' && styles.filterOptionActive,
+              ]}
+              onPress={() => handleFilterChange('Employee')}
+            >
+              <Text
+                style={[
+                  styles.filterOptionText,
+                  selectedFilter === 'Employee' &&
+                    styles.filterOptionTextActive,
+                ]}
+              >
+                Employees
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.filterOption,
+                selectedFilter === 'Clerk' && styles.filterOptionActive,
+              ]}
+              onPress={() => handleFilterChange('Clerk')}
+            >
+              <Text
+                style={[
+                  styles.filterOptionText,
+                  selectedFilter === 'Clerk' && styles.filterOptionTextActive,
+                ]}
+              >
+                Clerks
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -266,7 +374,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={filteredEmployees}
+        data={getFilteredEmployees()}
         keyExtractor={item => item.id.toString()}
         renderItem={renderEmployee}
         ListHeaderComponent={renderHeader}
@@ -274,7 +382,7 @@ const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           styles.flatListContent,
-          filteredEmployees.length === 0 && styles.emptyListContent,
+          getFilteredEmployees().length === 0 && styles.emptyListContent,
         ]}
         refreshControl={
           <RefreshControl
@@ -319,72 +427,204 @@ export default HomeScreen;
 const useStyles = appColors => {
   return StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.background,
     },
 
     // Header Styles
     headerContainer: {
+      paddingBottom: 20,
+    },
+    logoSection: {
+      alignItems: 'center',
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 8 : 42,
       paddingBottom: 16,
+      backgroundColor: appColors.cardBackground,
     },
-    gradientHeader: {
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 16 : 50,
+    logo: {
+      width: 40,
+      height: 40,
+    },
+    logoDivider: {
+      height: 1,
+      backgroundColor: appColors.borderColor + '20',
+      marginHorizontal: 20,
+      marginBottom: 16,
+    },
+    mainHeader: {
+      backgroundColor: appColors.cardBackground,
+      paddingTop: 20,
       paddingHorizontal: 20,
-      marginHorizontal: -20,
+      paddingBottom: 24,
+      borderBottomLeftRadius: 24,
+      borderBottomRightRadius: 24,
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders and glows
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 4,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.12,
+            shadowRadius: 16,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '30',
+          }),
     },
-    headerContent: {
+    headerTop: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       marginBottom: 20,
     },
-    titleContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
+    titleSection: {
       flex: 1,
     },
-    headerTitle: {
-      fontSize: 28,
-      fontWeight: '700',
-      color: appColors.black,
+    titleRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 4,
+      gap: 12,
+    },
+    titleTextContainer: {
       marginLeft: 12,
       flex: 1,
     },
-    employeeCount: {
-      backgroundColor: appColors.primary,
-      paddingHorizontal: 12,
-      paddingVertical: 6,
+    headerTitle: {
+      fontSize: 32,
+      fontWeight: '800',
+      color: appColors.textPrimary,
+      marginBottom: 4,
+      flex: 1,
+    },
+    headerSubtitle: {
+      fontSize: 16,
+      color: appColors.textSecondary,
+      marginTop: 5,
+    },
+    headerActions: {
+      flexDirection: 'row',
+      gap: 8,
+    },
+    actionButton: {
+      width: 40,
+      height: 40,
+      borderRadius: 12,
+      backgroundColor: appColors.actionButtonBg,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 2,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 4,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '20',
+          }),
+    },
+
+    // Stats Row
+    statsRow: {
+      flexDirection: 'row',
+      backgroundColor: appColors.cardBackground,
       borderRadius: 16,
-      minWidth: 36,
+      padding: 16,
+      marginBottom: 20,
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 3,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '25',
+          }),
+    },
+    statItem: {
+      flex: 1,
       alignItems: 'center',
     },
-    employeeCountText: {
-      color: appColors.white,
-      fontSize: 14,
-      fontWeight: '600',
+    statNumber: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: appColors.primary,
+      marginBottom: 4,
     },
-    menuButton: {
-      padding: 8,
-      borderRadius: 12,
-      backgroundColor: appColors.accent,
+    statLabel: {
+      fontSize: 12,
+      fontWeight: '500',
+      color: appColors.textSecondary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    statDivider: {
+      width: 1,
+      backgroundColor: '#ffffff25',
+      marginHorizontal: 8,
     },
 
     // Search Styles
+    searchWrapper: {
+      marginBottom: 8,
+    },
     searchContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: appColors.white,
       borderRadius: 16,
       paddingHorizontal: 16,
-      paddingVertical: 12,
-      marginBottom: 8,
-      borderWidth: 1,
-      borderColor: appColors.borderColor,
-      elevation: 2,
-      shadowColor: appColors.black,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 4,
+      paddingVertical: 14,
+      borderWidth: 2,
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: no shadows
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 2,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.06,
+            shadowRadius: 4,
+          }),
     },
     searchIcon: {
       marginRight: 12,
@@ -392,7 +632,7 @@ const useStyles = appColors => {
     searchInput: {
       flex: 1,
       fontSize: 16,
-      color: appColors.black,
+      color: appColors.textPrimary,
       paddingVertical: 0,
     },
     clearButton: {
@@ -405,8 +645,61 @@ const useStyles = appColors => {
     },
     searchResultsText: {
       fontSize: 14,
-      color: appColors.gray,
+      color: appColors.textSecondary,
       fontStyle: 'italic',
+    },
+
+    // Filter Styles
+    filterDropdown: {
+      backgroundColor: appColors.cardBackground,
+      borderRadius: 16,
+      padding: 16,
+      marginTop: 12,
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 4,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.12,
+            shadowRadius: 8,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '25',
+          }),
+    },
+    filterOption: {
+      paddingVertical: 12,
+      paddingHorizontal: 16,
+      borderRadius: 12,
+      marginBottom: 8,
+      backgroundColor: appColors.searchBackground,
+      borderWidth: 1,
+      borderColor: appColors.borderLight + '20',
+    },
+    filterOptionActive: {
+      backgroundColor: appColors.primary + '15',
+      borderWidth: 1,
+      borderColor: appColors.primary + '40',
+    },
+    filterOptionText: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: appColors.textPrimary,
+      textAlign: 'center',
+    },
+    filterOptionTextActive: {
+      color: appColors.primary,
+      fontWeight: '600',
     },
 
     // List Styles
@@ -427,31 +720,152 @@ const useStyles = appColors => {
       marginBottom: 0,
     },
     employeeCard: {
-      backgroundColor: appColors.white,
-      borderRadius: 16,
-      padding: 16,
-      elevation: 3,
-      shadowColor: appColors.black,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 6,
-      borderWidth: 1,
-      borderColor: appColors.borderColor + '40',
+      backgroundColor: appColors.cardBackground,
+      borderRadius: 20,
+      padding: 20,
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 3,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '25',
+          }),
+    },
+    employeeCardContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    avatarSection: {
       position: 'relative',
+      marginRight: 16,
     },
-    departmentTag: {
-      position: 'absolute',
-      top: 12,
-      right: 12,
-      backgroundColor: appColors.primary + '20',
-      paddingHorizontal: 8,
-      paddingVertical: 4,
-      borderRadius: 8,
+    avatarContainer: {
+      width: 56,
+      height: 56,
+      borderRadius: 28,
+      backgroundColor: appColors.searchBackground,
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 2,
+      borderColor: appColors.primary + '30',
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: no shadows
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 1,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.05,
+            shadowRadius: 2,
+          }),
     },
-    departmentText: {
+    employeeInfo: {
+      flex: 1,
+      marginRight: 16,
+    },
+    employeeName: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: appColors.textPrimary,
+      marginBottom: 4,
+    },
+    employeeEmail: {
+      fontSize: 14,
+      color: appColors.textSecondary,
+      marginBottom: 8,
+    },
+    employeeMeta: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 6,
+    },
+    employeeMetaText: {
       fontSize: 12,
+      color: appColors.textTertiary,
       fontWeight: '500',
+    },
+    actionsSection: {
+      alignItems: 'flex-end',
+      gap: 8,
+    },
+    roleTag: {
+      backgroundColor: appColors.primary + '15',
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: appColors.primary + '35',
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: no shadows
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            backgroundColor: 'transparent',
+            borderColor: appColors.primary,
+          }),
+    },
+    roleText: {
+      fontSize: 12,
+      fontWeight: '600',
       color: appColors.primary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+    },
+    editButton: {
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: appColors.actionButtonBg,
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 1,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 4,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '20',
+            backgroundColor: 'white',
+          }),
     },
 
     // Empty State
@@ -464,14 +878,14 @@ const useStyles = appColors => {
     emptyStateTitle: {
       fontSize: 24,
       fontWeight: '600',
-      color: appColors.black,
+      color: appColors.textPrimary,
       marginTop: 24,
       marginBottom: 8,
       textAlign: 'center',
     },
     emptyStateSubtitle: {
       fontSize: 16,
-      color: appColors.gray,
+      color: appColors.textSecondary,
       textAlign: 'center',
       lineHeight: 22,
       maxWidth: width * 0.8,
@@ -487,11 +901,23 @@ const useStyles = appColors => {
       width: 60,
       height: 60,
       borderRadius: 30,
-      elevation: 2,
-      shadowColor: appColors.black,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 8,
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle glow effect
+            elevation: 0,
+            shadowColor: appColors.primary,
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.3,
+            shadowRadius: 20,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 12,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.25,
+            shadowRadius: 16,
+          }),
     },
     fabGradient: {
       width: 60,
@@ -500,6 +926,8 @@ const useStyles = appColors => {
       backgroundColor: appColors.primary,
       justifyContent: 'center',
       alignItems: 'center',
+      borderWidth: 2,
+      borderColor: appColors.primary + '40',
     },
   });
 };
@@ -510,16 +938,30 @@ const useShimmerStyles = appColors => {
       marginBottom: 16,
     },
     shimmerCard: {
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.cardBackground,
       borderRadius: 16,
       padding: 16,
-      elevation: 3,
-      shadowColor: appColors.black,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 6,
-      borderWidth: 1,
-      borderColor: appColors.borderColor + '40',
+      ...(appColors.background === '#1A1A1A'
+        ? {
+            // Dark mode: use subtle borders
+            borderWidth: 1,
+            borderColor: '#ffffff25',
+            elevation: 0,
+            shadowColor: 'transparent',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0,
+            shadowRadius: 0,
+          }
+        : {
+            // Light mode: use shadows
+            elevation: 3,
+            shadowColor: appColors.shadowColor,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 6,
+            borderWidth: 1,
+            borderColor: appColors.borderLight + '30',
+          }),
       flexDirection: 'row',
       alignItems: 'center',
     },
@@ -527,7 +969,7 @@ const useShimmerStyles = appColors => {
       width: 50,
       height: 50,
       borderRadius: 25,
-      backgroundColor: appColors.borderColor + '20',
+      backgroundColor: appColors.borderLight + '25',
       marginRight: 12,
     },
     shimmerContent: {
@@ -536,20 +978,20 @@ const useShimmerStyles = appColors => {
     shimmerName: {
       width: '80%',
       height: 20,
-      backgroundColor: appColors.borderColor + '20',
+      backgroundColor: appColors.borderLight + '25',
       borderRadius: 8,
       marginBottom: 4,
     },
     shimmerEmail: {
       width: '60%',
       height: 16,
-      backgroundColor: appColors.borderColor + '20',
+      backgroundColor: appColors.borderLight + '25',
       borderRadius: 8,
     },
     shimmerDepartment: {
       width: 80,
       height: 20,
-      backgroundColor: appColors.borderColor + '20',
+      backgroundColor: appColors.borderLight + '25',
       borderRadius: 8,
       marginLeft: 'auto',
     },

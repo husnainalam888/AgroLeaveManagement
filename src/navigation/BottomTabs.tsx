@@ -23,7 +23,7 @@ export default function BottomTabs() {
       screenOptions={{
         headerShown: false,
         sceneStyle: {
-          backgroundColor: appColors.white,
+          backgroundColor: appColors.background,
           paddingTop: 16,
         },
       }}

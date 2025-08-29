@@ -99,7 +99,7 @@ const useStyles = (appColors: any) => {
       alignItems: 'center',
 
       justifyContent: 'space-around',
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.background,
       // borderRadius: 100,
       paddingVertical: 4,
       // paddingHorizontal: 12,

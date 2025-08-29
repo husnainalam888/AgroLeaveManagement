@@ -196,15 +196,17 @@ const useStyles = appColors => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.background,
       paddingHorizontal: 16,
       gap: 16,
     },
     profileContainer: {
       marginTop: 6,
       padding: 16,
-      backgroundColor: appColors.accent,
+      backgroundColor: appColors.cardBackground,
       borderRadius: 10,
+      borderWidth: 1,
+      borderColor: '#ffffff20',
     },
     menuRow: {
       flexDirection: 'row',
@@ -212,7 +214,7 @@ const useStyles = appColors => {
       alignItems: 'center',
       paddingHorizontal: 16,
       minHeight: 50,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.cardBackground,
       borderRadius: 10,
       borderWidth: 1,
       borderColor: appColors.borderColor,

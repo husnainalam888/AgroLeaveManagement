@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import GlobalSheet from './GlobalSheet';
 import {
   Image,
@@ -43,6 +43,7 @@ const AddEmployeeSheet = ({
     start_date: itemToEdit?.start_date || '',
     image: itemToEdit?.image || '',
   });
+  console.log('AddEmployeeSheet : itemToEdit', itemToEdit);
   const [isDarkMode] = useMMKVStorage('isDarkMode', STORAGE, false);
   const [selectedRole] = useMMKVStorage('selectedRole', STORAGE, 'Employee');
   const appColors = useAppColors();
@@ -78,6 +79,19 @@ const AddEmployeeSheet = ({
       console.log(TAG, 'handleAddEmployee : validation failed');
     }
   };
+  useEffect(() => {
+    if (itemToEdit?.id) {
+      setForm({
+        name: itemToEdit?.name || '',
+        email: itemToEdit?.email || '',
+        password: itemToEdit?.password || '',
+        phone: itemToEdit?.phone || '',
+        job_role: itemToEdit?.job_role || '',
+        start_date: itemToEdit?.start_date || '',
+        image: itemToEdit?.image || '',
+      });
+    }
+  }, [itemToEdit]);
   const validation = () => {
     if (!form.name) {
       showToast.error('Error', 'Name is required');

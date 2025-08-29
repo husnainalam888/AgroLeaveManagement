@@ -37,6 +37,11 @@ const dark = {
   roleIndicatorTextColor: '#FFFFFF',
   roleSubtextColor: '#B0B0B0',
   forgotPasswordColor: '#efcb00',
+  // New colors for HomeScreen and LeaveRequestScreen
+  searchBackground: '#1A1A1A',
+  actionButtonBg: '#404040',
+  statusActive: '#4CAF50',
+  statusInactive: '#FF6B6B',
 };
 
 const light = {
@@ -74,6 +79,11 @@ const light = {
   roleIndicatorTextColor: '#2D3748',
   roleSubtextColor: '#718096',
   forgotPasswordColor: '#efcb00',
+  // New colors for HomeScreen and LeaveRequestScreen
+  searchBackground: '#F8F9FA',
+  actionButtonBg: '#F0F0F0',
+  statusActive: '#4CAF50',
+  statusInactive: '#FF6B6B',
 };
 export const useAppColors = () => {
   const [isDarkMode] = useMMKVStorage('isDarkMode', STORAGE, false);

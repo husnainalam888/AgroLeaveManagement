@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMMKVStorage } from 'react-native-mmkv-storage';
 import { STORAGE } from './src/storage/STORAGE';
 import { Appearance, StatusBar, useColorScheme } from 'react-native';
+import { appColors } from './src/assets/appColors';
 
 export default function App() {
   const [isDarkMode, setIsDarkMode] = useMMKVStorage(
@@ -35,7 +36,10 @@ export default function App() {
 
   return (
     <SafeAreaView
-      style={{ flex: 1, backgroundColor: isDarkMode ? '#000' : '#fff' }}
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? appColors.background : '#fff',
+      }}
     >
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <MenuProvider>

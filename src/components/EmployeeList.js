@@ -80,7 +80,7 @@ const useStyles = appColors => {
       width: 50,
       height: 50,
       borderRadius: 50,
-      backgroundColor: appColors.accent,
+      backgroundColor: appColors.background,
     },
     flatList: {
       marginTop: 16,

@@ -82,8 +82,8 @@ const EmployeeCalander = () => {
           );
         }}
         theme={{
-          backgroundColor: appColors.white,
-          calendarBackground: appColors.white,
+          backgroundColor: appColors.background,
+          calendarBackground: appColors.background,
           textSectionTitleColor: appColors.gray,
           textSectionTitleDisabledColor: appColors.lightGray,
           arrowColor: appColors.primary,
@@ -142,6 +142,7 @@ const useStyles = appColors =>
       flex: 1,
       paddingHorizontal: 16,
       paddingTop: 16,
+      backgroundColor: appColors.background,
     },
     calendar: {
       marginHorizontal: -16,

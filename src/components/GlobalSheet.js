@@ -129,7 +129,7 @@ const useStyles = appColors => {
     },
     actionSheet: {
       flex: 1,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.background,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
       padding: 24,
@@ -149,7 +149,7 @@ const useStyles = appColors => {
     buttonContainer: {
       flexDirection: 'row',
       gap: 12,
-      backgroundColor: appColors.white,
+      backgroundColor: appColors.background,
       paddingHorizontal: 16,
       paddingVertical: 8,
     },
