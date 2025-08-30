@@ -370,7 +370,7 @@ export default function LeaveList({ data = leaves, route }) {
 const useStyles = appColors => {
   return StyleSheet.create({
     listContainer: {
-      paddingHorizontal: 0,
+      paddingHorizontal: 20,
       flexGrow: 1,
       backgroundColor: appColors.background,
       paddingBottom: 16,

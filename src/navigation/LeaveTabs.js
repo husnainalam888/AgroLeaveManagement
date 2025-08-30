@@ -124,6 +124,7 @@ const useStyles = appColors => {
   return StyleSheet.create({
     tabContainer: {
       marginBottom: 20,
+      marginHorizontal: 20,
     },
     tabBackground: {
       flexDirection: 'row',

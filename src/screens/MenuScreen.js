@@ -206,7 +206,12 @@ const useStyles = appColors => {
       backgroundColor: appColors.cardBackground,
       borderRadius: 10,
       borderWidth: 1,
-      borderColor: '#ffffff20',
+      borderColor: appColors.borderColor,
+      shadowColor: appColors.darkGray,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 3.84,
+      elevation: 2,
     },
     menuRow: {
       flexDirection: 'row',

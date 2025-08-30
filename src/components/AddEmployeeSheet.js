@@ -308,6 +308,7 @@ const useStyles = appColors =>
       borderRadius: 50,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: appColors.cardBackground,
     },
     editIconContainer: {
       position: 'absolute',

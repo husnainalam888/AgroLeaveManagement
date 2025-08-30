@@ -40,7 +40,9 @@ export const SingleEmployeeItem = ({ item, hideEditIcon = false, onEdit }) => {
         image={item.image}
         style={styles.image}
         size={30}
-        containerStyle={{ marginTop: 10 }}
+        containerStyle={{
+          marginTop: 10,
+        }}
       />
       <View style={styles.infoContainer}>
         <Text style={styles.name}>{item.heading}</Text>

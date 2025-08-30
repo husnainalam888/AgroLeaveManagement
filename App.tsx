@@ -15,9 +15,19 @@ export default function App() {
     STORAGE,
     false,
   );
+  const [isFirstTime, setIsFirstTime] = useMMKVStorage(
+    'isFirstTime',
+    STORAGE,
+    true,
+  );
   const colorScheme = useColorScheme();
 
   useEffect(() => {
+    if (isFirstTime) {
+      setIsFirstTime(false);
+    } else {
+      return;
+    }
     if (colorScheme === 'dark') {
       setIsDarkMode(true);
     } else {

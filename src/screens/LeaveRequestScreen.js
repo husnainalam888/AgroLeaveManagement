@@ -58,7 +58,7 @@ const useStyles = appColors => {
     },
     mainHeader: {
       backgroundColor: appColors.cardBackground,
-      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 16 : 50,
+      paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 16 : 20,
       paddingHorizontal: 20,
       paddingBottom: 24,
       borderBottomLeftRadius: 24,
@@ -102,7 +102,6 @@ const useStyles = appColors => {
 
     leaveTabsContainer: {
       flex: 1,
-      marginHorizontal: 20,
     },
   });
 };
